@@ -13,29 +13,39 @@ def handle_input(user_service):
         option = input("Selecciona una opción: ")
 
         if option == '1':
-            name = input("Nombre: ")
-            age = int(input("Edad: "))
+            nombre = input("Nombre: ")
+            edad = int(input("Edad: "))
             rut = input("Rut: ")
             mail = input("Mail: ")
             asignatura = input("Asignatura: ")
             promedio = int(input("Promedio: "))
-            user_service.add_user(name,age,rut,mail, asignatura, promedio)
+            user_service.add_user(nombre,edad,rut,mail,asignatura,promedio)
             print("Usuario agregado con éxito.")
 
         elif option == '2':
             users = user_service.get_users()
-          
             showStudentTable(users)
+
         elif option == '3':
-            user_id = int(input("ID del usuario: "))
-            name = input("Nuevo nombre: ")
-            age = int(input("Nueva edad: "))
-            user_service.update_user(user_id, name, age)
+            users = user_service.get_users()
+            showStudentTable(users)
+
+            rut = input("Rut del usuario a modificar: ")
+            validacion=next((num[0] for num in users if num[0] == rut),None)
+            if not validacion:
+                print("No existe registro")
+
+            nombre = input("Nuevo nombre: ")
+            edad = int(input("Nueva edad: "))
+            mail = input("Mail: ")
+            asignatura = input("Asignatura: ")
+            promedio = int(input("Promedio: "))
+            user_service.update_user(nombre,edad,rut,mail,asignatura,promedio)
             print("Usuario modificado con éxito.")
 
         elif option == '4':
-            user_id = int(input("ID del usuario a eliminar: "))
-            user_service.delete_user(user_id)
+            rut = input("Rut del usuario a eliminar: ")
+            user_service.delete_user(rut)
             print("Usuario eliminado.")
 
         elif option == '5':
@@ -47,8 +57,9 @@ def handle_input(user_service):
 def showStudentTable(users):
 
     if not users:
-        raise ValueError("No hay registros")
+        print("No hay usuarios")
+        return
     
     headers = ["RUT", "Nombre", "Edad", "Mail", "Asignatura", "Promedio"]
 
-    print(tabulate(users, headers, tablefmt="grid"))
+    print(tabulate(users, headers, tablefmt="fancy_grid"))

@@ -11,7 +11,7 @@ class MySQLDatabase:
         )
         self.cursor = self.connection.cursor()
 
-    def create_record(self, table, data):
+    def create_record(self, data):
         query = f"INSERT INTO alumnos (nombre, edad, rut, mail, asignatura, promedio) VALUES (%s,%s,%s,%s,%s,%s)"
         self.cursor.execute(query, data)
         self.connection.commit()
@@ -21,13 +21,22 @@ class MySQLDatabase:
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
-    def update_record(self, table, data, record_id):
-        query = f"UPDATE {table} SET name = %s, age = %s WHERE id = %s"
+    def update_record(self, data, record_id):
+        query = """
+                UPDATE alumnos SET 
+                    nombre = %s,
+                    edad = %s,
+                    mail = %s,
+                    asignatura = %s,
+                    promedio = %s
+                WHERE rut = %s
+                """
+
         self.cursor.execute(query, (*data, record_id))
         self.connection.commit()
 
-    def delete_record(self, table, record_id):
-        query = f"DELETE FROM {table} WHERE id = %s"
+    def delete_record(self, record_id):
+        query = f"DELETE FROM alumnos WHERE rut = %s"
         self.cursor.execute(query, (record_id,))
         self.connection.commit()
 
